@@ -1,9 +1,8 @@
 import argparse
 import pandas as pd
 import numpy as np
-from xgboost import XGBClassifier
 from sklearn.metrics import make_scorer
-from utils import read_csv, prepare_data, average_odds_scoring, run_grid_search, calculate_performance_and_fairness_metrics, build_metrics_list, plot_metrics_grid
+from utils import read_csv, load_from_pickle, prepare_data, average_odds_scoring, run_grid_search, calculate_performance_and_fairness_metrics, build_metrics_list, plot_metrics_grid
 from constants import EVAL_METRICS, FAIRNESS_METRICS, XGB_PARAMS, LFR_PARAMS, ADVERSARIAL_PARAMS, EGR_PARAMS, PROTECTED_ATTRS
 from aif360.sklearn.preprocessing import Reweighing, LearnedFairRepresentations
 from aif360.sklearn.inprocessing import AdversarialDebiasing, ExponentiatedGradientReduction
@@ -19,7 +18,7 @@ class PreprocessingModel:
     """
     A class that handles:
     - Baseline model
-    - Fairness mitigations (Reweighing, LFR)
+    - Fairness mitigations (Reweighing, LFR) 
     - Metrics & plots
     """
 
@@ -44,12 +43,11 @@ class PreprocessingModel:
         ) = prepare_data(self.df, self.protected_attrs, self.target)
 
 
-    def load_baseline(self, path="output/csv/xgboost_df.csv"):
-        self.baseline_df = read_csv(path)
-
+    def load_baseline(self):
+        self.baseline_df = read_csv("output/csv/baseline_xgboost.csv")
+        self.baseline_model = load_from_pickle("output/model/baseline_model.pkl")
 
     # Reweighing
-
     def run_reweighing(self):
         scorer = make_scorer(
             average_odds_scoring,
@@ -61,9 +59,9 @@ class PreprocessingModel:
         weights = Reweighing(self.protected_attrs).fit_transform(
             self.X_train, self.y_train
         )[1]
-
+ 
         reweigh_grid = run_grid_search(
-            XGBClassifier(),
+            self.baseline_model,
             XGB_PARAMS,
             self.X_train,
             self.y_train,
@@ -89,7 +87,7 @@ class PreprocessingModel:
             "Reweighing",
             self.protected_attrs,
         )
-        plot_metrics_grid(metrics_list, labels, ["Reweighing", "XGBoost"])
+        plot_metrics_grid(metrics_list, labels, ["Reweighing", "XGBoost"], "pre-processing-mitigation")
 
     # Learned Fair Representation
     def run_lfr(self):
@@ -127,7 +125,7 @@ class PreprocessingModel:
             "LFR",
             self.protected_attrs,
         )
-        plot_metrics_grid(metrics_list_lfr, labels, ["LFR", "XGBoost"])
+        plot_metrics_grid(metrics_list_lfr, labels, ["LFR", "XGBoost"], "pre-processing-mitigation")
 
     # Run all steps
     def run_preprocessing_models(self):
@@ -166,9 +164,9 @@ class InprocessingModel:
             *_,
         ) = prepare_data(self.df, self.protected_attrs, self.target)
 
-    def load_baseline(self, path="output/csv/xgboost_df.csv"):
-        self.baseline_df = read_csv(path)
-
+    def load_baseline(self):
+        self.baseline_df = read_csv("output/csv/baseline_xgboost.csv")
+        self.baseline_model = load_from_pickle("output/model/baseline_model.pkl")
 
     # Adversarial Debiasing
     def run_adversarial(self):
@@ -211,7 +209,7 @@ class InprocessingModel:
             "Adversarial Debiasing",
             self.protected_attrs,
         )
-        plot_metrics_grid(metrics_list, labels, ["Adversarial Debiasing", "XGBoost"])
+        plot_metrics_grid(metrics_list, labels, ["Adversarial Debiasing", "XGBoost"], "in-processing-mitigation")
 
     # Exponentiated Gradient Reduction
     def run_egr(self):
@@ -219,7 +217,7 @@ class InprocessingModel:
 
         egr = ExponentiatedGradientReduction(
             self.protected_attrs,
-            estimator=XGBClassifier(),
+            estimator=self.baseline_model,
             constraints="EqualizedOdds",
         )
 
@@ -253,7 +251,7 @@ class InprocessingModel:
             "EGR",
             self.protected_attrs,
         )
-        plot_metrics_grid(metrics_list, labels, ["EGR", "XGBoost"])
+        plot_metrics_grid(metrics_list, labels, ["EGR", "XGBoost"], "in-processing-mitigation")
 
     # Run all steps
     def run_inprocessing_models(self):
@@ -291,13 +289,15 @@ class PostProcessingModel:
             *_,
         ) = prepare_data(self.df, self.protected_attrs, self.target)
 
-    def load_baseline(self, path="output/csv/xgboost_df.csv"):
-        self.baseline_df = read_csv(path)
+    def load_baseline(self):
+        self.baseline_df = read_csv("output/csv/baseline_xgboost.csv")
+        self.baseline_model = load_from_pickle("output/model/baseline_model.pkl")
+
 
     # Calibrated Equalized Odds
     def run_calibrated_eq_odds(self):
         model = PostProcessingMeta(
-            XGBClassifier(),
+            self.baseline_model,
             CalibratedEqualizedOdds(
                 self.protected_attrs[1], cost_constraint="fnr", random_state=0
             ),
@@ -311,7 +311,7 @@ class PostProcessingModel:
         cal_df = calculate_performance_and_fairness_metrics(
             self.y_test, y_pred, y_proba, self.protected_attrs
         )
-        cal_df.to_csv("output/csv/calibrated_df.csv", index=False)
+        cal_df.to_csv("output/csv/calibrated_eq_odds.csv", index=False)
 
         labels = ["Evaluation Metrics"] + [
             f"{prot_attr} Fairness Metrics" for prot_attr in self.protected_attrs
@@ -324,12 +324,12 @@ class PostProcessingModel:
             "Calibrated Equalized Odds",
             self.protected_attrs,
         )
-        plot_metrics_grid(metrics_list, labels, ["Calibrated Equalized Odds", "XGBoost"])
+        plot_metrics_grid(metrics_list, labels, ["Calibrated Equalized Odds", "XGBoost"], "post-processing-mitigation")
 
     # Reject Option Classification
     def run_reject_option(self):
         model = PostProcessingMeta(
-            XGBClassifier(),
+            self.baseline_model,
             RejectOptionClassifierCV(self.protected_attrs[1], scoring="average_odds"),
             random_state=0,
         )
@@ -341,7 +341,7 @@ class PostProcessingModel:
         rej_df = calculate_performance_and_fairness_metrics(
             self.y_test, y_pred, y_proba, self.protected_attrs
         )
-        rej_df.to_csv("output/csv/reject_df.csv", index=False)
+        rej_df.to_csv("output/csv/reject_option_classification.csv", index=False)
 
         labels = ["Evaluation Metrics"] + [
             f"{prot_attr} Fairness Metrics" for prot_attr in self.protected_attrs
@@ -355,7 +355,7 @@ class PostProcessingModel:
             self.protected_attrs,
         )
         plot_metrics_grid(
-            metrics_list, labels, ["Reject Option Classification", "XGBoost"]
+            metrics_list, labels, ["Reject Option Classification", "XGBoost"], "post-processing-mitigation"
         )
 
     # Run all steps
@@ -373,7 +373,7 @@ def main():
         type=str,
         choices=["preprocessing", "inprocessing", "postprocessing"],
         required=True,
-        help="Choose which fairness pipeline to run",
+        help="Choose which bias mitigation pipeline to run",
     )
 
     input_file = "data/standard_df.csv"

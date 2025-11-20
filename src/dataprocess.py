@@ -42,7 +42,7 @@ class DataPreprocessorPipeline:
         admission_labels = [1, 2, 3, 4, 5]
         self.bin_column('Admission_grade', admission_bins, admission_labels)
 
-    def plot_distibution_data(self, output_path='output/plot/variable_distributions.png'):
+    def plot_distribution_data(self, output_path='output/plot/pre-modeling-detection/variable_distributions.png'):
         """
         Generate plots to visualize the processed data.
         """
@@ -51,7 +51,7 @@ class DataPreprocessorPipeline:
 
         # Setting up the plot
         fig, axes = plt.subplots(2, 4, figsize=(15, 8))
-        fig.suptitle('Distribution of Selected Variables')
+        fig.suptitle('Distribution of Selected Variables', fontsize=15, weight="bold")
 
         # Plotting histograms for numerical variables
         for i, var in enumerate(numerical_vars):
@@ -98,13 +98,11 @@ class DataPreprocessorPipeline:
         """
         self.filter_target_values()
         self.clean_column_names()
-        self.plot_distibution_data()
+        self.plot_distribution_data()
         self.preprocess_age_and_admission()
         privileged_groups, total_columns = self.get_privileged_groups()
         standard_df = self.preprocess_standard_dataset(privileged_groups, total_columns)
         save_to_csv(standard_df, output_path)
-
-
 
 def main():
     input_file = 'data/academic_retention_dataset.csv'

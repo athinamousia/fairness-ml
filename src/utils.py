@@ -1,5 +1,6 @@
 import pandas as pd
 import seaborn as sns
+import pickle
 import matplotlib.pyplot as plt
 from typing import List, Tuple, Any
 from sklearn.model_selection import GridSearchCV
@@ -18,6 +19,9 @@ from aif360.sklearn.metrics import (
 
 import lime.lime_tabular
 
+#---------------------------------------------------------------------
+# File I/O
+#---------------------------------------------------------------------
 
 def read_csv(file_path, sep=None):
     """
@@ -31,6 +35,19 @@ def save_to_csv(df, file_path):
     """
     df.to_csv(file_path, index=False)
 
+def save_to_pickle(obj, file_path):
+    """
+    Save an object to a pickle file.
+    """
+    with open(file_path, 'wb') as f:
+        pickle.dump(obj, f)
+
+def load_from_pickle(file_path):
+    """
+    Load an object from a pickle file.
+    """
+    with open(file_path, 'rb') as f:
+        return pickle.load(f)
 
 # ---------------------------------------------------------------------
 # Modeling
@@ -171,11 +188,13 @@ def plot_metrics_grid(
     metrics_frames,
     plot_titles,
     algorithm_labels,
+    algorithm_cat=None
 ):
     """
     Plot evaluation & fairness metrics in a 2x2 subplot grid.
     """
-    palette = sns.color_palette("mako", n_colors=len(algorithm_labels))
+    sns_palette = sns.color_palette("coolwarm")
+    palette = [sns_palette[0], sns_palette[2]] 
     fig, axes = plt.subplots(2, 2, figsize=(20, 18))
 
     for idx, metrics_df in enumerate(metrics_frames):
@@ -191,10 +210,15 @@ def plot_metrics_grid(
             palette=palette,
         )
         ax.set_title(plot_titles[idx], fontweight="bold", fontsize=14)
-        ax.set_xlabel("Metrics", fontsize=13)
+        ax.set_xlabel("", fontsize=13)
+        ax.set_ylabel("", fontsize=13)
         ax.tick_params(axis="both", labelsize=12)
         sns.despine(ax=ax, top=True, right=True, left=True, bottom=False)
-        ax.set_yticks([])
+        # ax.set_yticks([])
+        ax.grid(True, linestyle="--", alpha=0.4)
+        for spine in ["top", "right"]:
+            ax.spines[spine].set_visible(False)
+        ax.set_axisbelow(True)
 
         for bar in ax.patches:
             height = bar.get_height()
@@ -208,10 +232,15 @@ def plot_metrics_grid(
                     xytext=(0, 5),
                     textcoords="offset points",
                 )
-
-    plt.tight_layout()
-    plt.savefig(f"output/plot/{algorithm_labels[0]}_comparison.png")
-
+    fig.suptitle(
+        f'{algorithm_labels[0]} - XGBoost baseline model',
+        fontsize=20,
+        fontweight="bold",
+        y=1.02,
+        color="#333333"
+    )
+    plt.tight_layout(rect=[0, 0, 1, 0.97])
+    plt.savefig(f"output/plot/{algorithm_cat}/{algorithm_labels[0]}.png", dpi=300, bbox_inches="tight")
 
 # ---------------------------------------------------------------------
 # LIME Explanation
