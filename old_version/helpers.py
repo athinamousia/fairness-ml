@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import (
     balanced_accuracy_score,
     f1_score,
-    roc_auc_score, 
-    make_scorer
+    roc_auc_score,
+    make_scorer,
 )
 import lime
 
@@ -119,13 +119,15 @@ def plot_2x2_metrics(metrics_list, labels, algorithms):
 def lime_explanation(idx, X_train, X_test, grid_search):
     # Initialize LIME explainer
     explainer = lime.lime_tabular.LimeTabularExplainer(
-        training_data=X_train.values, 
-        feature_names=X_train.columns.tolist(), 
-        mode='classification'
+        training_data=X_train.values,
+        feature_names=X_train.columns.tolist(),
+        mode="classification",
     )
 
     # Explain a prediction
 
-    instance_to_explain = X_test.iloc[idx].values 
-    exp = explainer.explain_instance(instance_to_explain, grid_search.predict_proba, num_features=20)
+    instance_to_explain = X_test.iloc[idx].values
+    exp = explainer.explain_instance(
+        instance_to_explain, grid_search.predict_proba, num_features=20
+    )
     exp.as_pyplot_figure(label=exp.available_labels()[0])

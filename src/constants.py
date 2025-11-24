@@ -1,5 +1,27 @@
 # Selected columns used in the analysis
-KDE_DISTRIBUTION_COLS = ['Debtor', 'Gender', 'Age_at_enrollment', 'Marital_status', 'Tuition_fees_up_to_date', 'Admission_grade']
+COLUMNS_TO_DROP = [
+    "Curricular units 1st sem (approved)",
+    "Curricular units 1st sem (grade)",
+    "Curricular units 1st sem (credited)",
+    "Curricular units 1st sem (without evaluations)",
+    "Curricular units 2nd sem (approved)",
+    "Curricular units 2nd sem (grade)",
+    "Curricular units 2nd sem (credited)",
+    "Curricular units 2nd sem (without evaluations)",
+    "Curricular units 1st sem (evaluations)",
+    "Curricular units 2nd sem (evaluations)",
+    "Tuition fees up to date",
+]
+
+
+KDE_DISTRIBUTION_COLS = [
+    "Debtor",
+    "Gender",
+    "Age_at_enrollment",
+    "Marital_status",
+    "Tuition_fees_up_to_date",
+    "Admission_grade",
+]
 
 PROTECTED_ATTRS = ["Previous_qualification", "Debtor", "Tuition_fees_up_to_date"]
 

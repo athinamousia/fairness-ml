@@ -1,9 +1,17 @@
 site_name: Fairness ML
 nav:
-  - Overview: index.md
-  - Bias Detection: bias_detection.md
-  - Bias Mitigation: bias_mitigation.md
-  - Explainability: explainability.md
+  - Exploratory Data Analysis:
+      - Overview: data_processing/eda.md
+  - Bias Detection: 
+      - Overview: bias_detection/bias_detection.md
+      - Pre-Modeling Bias: bias_detection/pre_modeling_bias.md
+      - Post-Modeling Bias: bias_detection/post_modeling_bias.md
+  - Bias Mitigation: 
+      - Overview: bias_mitigation/bias_mitigation.md
+      - Pre-Processing Models: bias_mitigation/pre_processing_models.md
+      - In-Processing Models: bias_mitigation/in_processing_models.md
+      - Post-Processing Models: bias_mitigation/post_processing_models.md
+  - Explainability: explainability/explainability.md
 theme:
   name: material
   palette:
@@ -11,7 +19,5 @@ theme:
       primary: indigo
       accent: pink
   font:
-    text: Roboto
+    text: Inter
     code: Roboto Mono
-  # logo: images/logo.png
-  # favicon: images/favicon.ico
