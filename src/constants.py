@@ -1,3 +1,8 @@
+COLUMN_NAME_MAP = {
+    "Daytime/evening attendance\t": "Daytime/evening attendance",
+    "Nacionality": "Nationality",
+}
+
 # Selected columns used in the analysis
 COLUMNS_TO_DROP = [
     "Curricular units 1st sem (approved)",
@@ -10,6 +15,8 @@ COLUMNS_TO_DROP = [
     "Curricular units 2nd sem (without evaluations)",
     "Curricular units 1st sem (evaluations)",
     "Curricular units 2nd sem (evaluations)",
+    "Curricular units 1st sem (enrolled)",
+    "Curricular units 2nd sem (enrolled)",
     "Tuition fees up to date",
 ]
 
@@ -23,7 +30,7 @@ KDE_DISTRIBUTION_COLS = [
     "Admission_grade",
 ]
 
-PROTECTED_ATTRS = ["Previous_qualification", "Debtor", "Tuition_fees_up_to_date"]
+PROTECTED_ATTRS = ["Debtor", "Gender", "Scholarship holder"]
 
 # Evaluation and fairness metrics
 EVAL_METRICS = ["Balanced Accuracy", "F1 Score", "ROC AUC"]
@@ -46,6 +53,8 @@ LFR_PARAMS = {
     "reconstruct_weight": [1e-2, 1e-3, 1e-4],
     "target_weight": [10, 100, 1000],
     "fairness_weight": [0, 10, 100, 1000],
+    "n_prototypes": [10, 25, 50],
+    "max_iter": [500, 1000, 2000],
 }
 
 ADVERSARIAL_PARAMS = {

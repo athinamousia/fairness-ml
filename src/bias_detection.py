@@ -13,18 +13,27 @@ from sklearn.metrics import (
     roc_curve,
 )
 import numpy as np
-from constants import XGB_PARAMS, KDE_DISTRIBUTION_COLS
-from utils import read_csv, save_to_pickle, save_to_csv, prepare_data, calculate_performance_and_fairness_metrics
+from src.constants import XGB_PARAMS, KDE_DISTRIBUTION_COLS
+from src.utils import (
+    read_csv,
+    save_to_pickle,
+    save_to_csv,
+    split_data,
+    calculate_performance_and_fairness_metrics,
+)
 
 
 # Pre-Modeling Bias
 class PreModelingBias:
     """Analyse bias in data before model training."""
-    def __init__(self, df, target="Target"):
-        self.df = df
+
+    def __init__(self, target="Target"):
+        self.df = read_csv("data/standard_df.csv")
         self.target = target
 
-    def correlation_analysis(self, save_path="output/plot/pre-modeling-detection/correlation_analysis.png"):
+    def correlation_analysis(
+        self, save_path="docs/bias_detection/plot/correlation_analysis.png"
+    ):
         """Compute Spearman correlation & p-values vs target results."""
         predictors = [c for c in self.df.columns if c != self.target]
 
@@ -34,11 +43,9 @@ class PreModelingBias:
             corrs.append(corr)
             p_values.append(p)
 
-        results = pd.DataFrame({
-            "Predictor": predictors,
-            "Correlation": corrs,
-            "p_value": p_values
-        }).sort_values("Correlation", ascending=False)
+        results = pd.DataFrame(
+            {"Predictor": predictors, "Correlation": corrs, "p_value": p_values}
+        ).sort_values("Correlation", ascending=False)
 
         # --- Plot style ---
         sns.set_theme(style="whitegrid", font_scale=1.2)
@@ -54,21 +61,25 @@ class PreModelingBias:
 
         # --- Add correlation values and significance stars ---
         for i, (v, p) in enumerate(zip(results["Correlation"], results["p_value"])):
-            ax.text(v + 0.02 if v >= 0 else v - 0.02,
-                    i,
-                    f"{v:.2f}",
-                    va="center",
-                    ha="left" if v >= 0 else "right",
-                    fontsize=10)
+            ax.text(
+                v + 0.02 if v >= 0 else v - 0.02,
+                i,
+                f"{v:.2f}",
+                va="center",
+                ha="left" if v >= 0 else "right",
+                fontsize=10,
+            )
             if p < 0.05:
-                ax.text(1.02 if v >= 0 else -1.02,
-                        i,
-                        "*",
-                        va="center",
-                        ha="center",
-                        fontsize=14,
-                        weight="bold",
-                        color="black")
+                ax.text(
+                    1.02 if v >= 0 else -1.02,
+                    i,
+                    "*",
+                    va="center",
+                    ha="center",
+                    fontsize=14,
+                    weight="bold",
+                    color="black",
+                )
 
         ax.set_axisbelow(True)
         ax.yaxis.grid(True, linestyle="--", linewidth=0.6, color="#D9D9D9", alpha=0.6)
@@ -77,7 +88,9 @@ class PreModelingBias:
         # --- Axis & title formatting ---
         ax.axvline(0, color="#888888", linewidth=1)
         ax.set_xlabel("Spearman Correlation Coefficient", fontsize=12, labelpad=10)
-        ax.set_title("Spearman Correlation with Target", fontsize=14, weight="bold", pad=15)
+        ax.set_title(
+            "Spearman Correlation with Target", fontsize=14, weight="bold", pad=15
+        )
         ax.set_xlim(-1, 1)
         sns.despine(ax=ax, left=True, bottom=True)
 
@@ -91,13 +104,16 @@ class PreModelingBias:
         fig.savefig(save_path, dpi=300, bbox_inches="tight")
         plt.close(fig)
 
-
     def plot_kde_distributions(
         self,
-        cols=KDE_DISTRIBUTION_COLS,
-        save_path="output/plot/pre-modeling-detection/kde_distributions.png"
+        save_path="docs/bias_detection/plot/kde_distributions.png",
     ):
-        """Plot KDE distributions of target vs categorical columns with clear color labels."""
+        """Plot KDE distributions of target vs all categorical columns with clear color labels."""
+        # Use all categorical columns except the target
+        cols = self.df.columns.tolist()
+        if self.target in cols:
+            cols.remove(self.target)
+
         n_cols = 2
         n_rows = int(np.ceil(len(cols) / n_cols))
         fig, axes = plt.subplots(n_rows, n_cols, figsize=(14, 4 * n_rows))
@@ -108,7 +124,7 @@ class PreModelingBias:
 
         for ax, col in zip(axes, cols):
             categories = self.df[col].dropna().unique()
-            colors = palette[:len(categories)]  # assign one color per category
+            colors = palette[: len(categories)]  # assign one color per category
 
             for cat, color in zip(categories, colors):
                 sns.kdeplot(
@@ -119,7 +135,7 @@ class PreModelingBias:
                     linewidth=1.5,
                     color=color,
                     ax=ax,
-                    label=str(cat)
+                    label=str(cat),
                 )
 
             # --- Formatting ---
@@ -128,21 +144,27 @@ class PreModelingBias:
             ax.set_ylabel("Density", fontsize=11)
 
             # Show legend
-            ax.legend(title=col, fontsize=9, title_fontsize=10, frameon=False, loc="upper right")
+            ax.legend(
+                title=col,
+                fontsize=9,
+                title_fontsize=10,
+                frameon=False,
+                loc="upper right",
+            )
 
             ax.grid(True, linestyle="--", alpha=0.4)
             for spine in ["top", "right"]:
                 ax.spines[spine].set_visible(False)
 
         # Hide empty axes if any
-        for ax in axes[len(cols):]:
+        for ax in axes[len(cols) :]:
             ax.axis("off")
 
         plt.suptitle(
             "KDE Distributions of Target by Categorical Variables",
             fontsize=15,
             weight="bold",
-            y=1.02
+            y=1.02,
         )
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -153,8 +175,8 @@ class PreModelingBias:
 class PostModelingBias:
     """Train models, evaluate, and compute fairness metrics."""
 
-    def __init__(self, df: pd.DataFrame, target="Target"):
-        self.df = df
+    def __init__(self, target="Target"):
+        self.df = read_csv("data/standard_df.csv")
         self.target = target
 
     def train_and_evaluate(
@@ -163,7 +185,7 @@ class PostModelingBias:
         """Train XGBoost, evaluate, plot, and return fairness metrics."""
         protected_attrs = list(self.df.columns)[:-1]
 
-        X_train, X_test, y_train, y_test, *_ = prepare_data(
+        X_train, X_test, y_train, y_test, *_ = split_data(
             self.df, protected_attrs, self.target
         )
 
@@ -182,13 +204,21 @@ class PostModelingBias:
 
         self._plot_results(y_test, y_pred, y_proba, metrics)
 
-        fairness_df = calculate_performance_and_fairness_metrics(y_test, y_pred, y_proba, protected_attrs)
+        fairness_df = calculate_performance_and_fairness_metrics(
+            y_test, y_pred, y_proba, protected_attrs
+        )
         fairness_df.to_csv("output/csv/baseline_xgboost.csv", index=False)
 
         return fairness_df, metrics
 
     @staticmethod
-    def _plot_results(y_true, y_pred, y_proba, metrics, save_path="output/plot/post-modeling-detection/baseline_model_evaluation.png"):
+    def _plot_results(
+        y_true,
+        y_pred,
+        y_proba,
+        metrics,
+        save_path="docs/bias_detection/plot/baseline_model_evaluation.png",
+    ):
         """Plot confusion matrix, ROC curve, and evaluation metrics."""
 
         # --- Metrics ---
@@ -203,8 +233,8 @@ class PostModelingBias:
         plt.subplots_adjust(wspace=0.3)
 
         # Palette
-        main_color = "#4C72B0" 
-        accent_color = "#55A868"  
+        main_color = "#4C72B0"
+        accent_color = "#55A868"
 
         # --- Confusion Matrix ---
         sns.heatmap(
@@ -269,34 +299,3 @@ class PostModelingBias:
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
         plt.close()
-
-def main():
-    parser = argparse.ArgumentParser(description="Run Fairness Pipelines")
-    parser.add_argument(
-        "--pipeline",
-        type=str,
-        choices=["pre-modeling", "post-modeling"],
-        required=True,
-        help="Choose which bias detection pipeline to run",
-    )
-
-    args = parser.parse_args()
-    input_file = "data/standard_df.csv"
-    df = read_csv(input_file)
-
-    if args.pipeline == "pre-modeling":
-        #--- Analyze bias before modeling ---
-        pre_model_bias = PreModelingBias(df)
-
-        # Save correlation and kde results
-        pre_model_bias.correlation_analysis()
-        pre_model_bias.plot_kde_distributions()
-
-    elif args.pipeline == "post-modeling":
-        #--- Train model and analyze bias after modeling ---
-        post_model_bias = PostModelingBias(df)
-        # Save evaluation and fairness metrics
-        fairness_df, metrics = post_model_bias.train_and_evaluate()
-
-if __name__ == "__main__":
-    main()

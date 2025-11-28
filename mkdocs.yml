@@ -1,7 +1,6 @@
 site_name: Fairness ML
 nav:
-  - Exploratory Data Analysis:
-      - Overview: data_processing/eda.md
+  - Exploratory Data Analysis: data_processing/eda.md
   - Bias Detection: 
       - Overview: bias_detection/bias_detection.md
       - Pre-Modeling Bias: bias_detection/pre_modeling_bias.md
@@ -21,3 +20,12 @@ theme:
   font:
     text: Inter
     code: Roboto Mono
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+

@@ -1,4 +1,0 @@
-Protected Attribute,Balanced Accuracy,F1 Score,ROC AUC,Statistical Parity Difference,Disparate Impact Ratio,Equal Opportunity Difference,Average Odds Difference
-Previous_qualification,0.888,0.9224,0.9478,0.5444,5.9,0.4603,0.3231
-Debtor,0.888,0.9224,0.9478,0.4499,2.7481,0.1975,0.1299
-Tuition_fees_up_to_date,0.888,0.9224,0.9478,-0.6795,0.0837,-0.2949,-0.2558

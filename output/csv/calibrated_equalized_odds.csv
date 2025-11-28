@@ -1,0 +1,4 @@
+Protected Attribute,Balanced Accuracy,F1 Score,ROC AUC,Statistical Parity Difference,Disparate Impact Ratio,Equal Opportunity Difference,Average Odds Difference
+Debtor,0.5996,0.7878,0.6148,0.7426,3.8857,0.3462,0.5913
+Gender,0.5996,0.7878,0.6148,0.0871,1.1026,0.022,0.0465
+Scholarship holder,0.5996,0.7878,0.6148,-0.0898,0.9079,-0.0011,-0.0671

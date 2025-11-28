@@ -5,11 +5,11 @@ from aif360.datasets import StandardDataset
 import seaborn as sns
 import matplotlib.pyplot as plt
 from src.utils import read_csv, save_to_csv
-from src.constants import COLUMNS_TO_DROP
+from src.constants import COLUMNS_TO_DROP, COLUMN_NAME_MAP
 
 
 class DataPreprocessorPipeline:
-    def __init__(self, df):
+    def __init__(self):
         """
         Initialize the DataPreprocessorPipeline with a CSV file path.
         """
@@ -22,23 +22,13 @@ class DataPreprocessorPipeline:
         2. Clean and standardize column names (lowercase, underscores, remove parentheses)
         3. Capitalize first letter of each column
         4. Replace 'nacionality' with 'Nationality'
+        5. Select only the desired columns
         """
         df = self.df.copy()
         # Remove leakage columns
-
         df = df.drop(columns=[col for col in COLUMNS_TO_DROP if col in df.columns])
-        # Clean column names
-        cols = [re.sub(r"\s+", "_", col.lower()) for col in df.columns]
-        cols = [re.sub(r"[()\[\]{}]", "", col) for col in cols]
-        cols = [re.sub(r"__+", "_", col) for col in cols]
-        # Capitalize first letter, fix 'nacionality'
-        new_columns = []
-        for col in cols:
-            if col == "nacionality":
-                new_columns.append("Nationality")
-            else:
-                new_columns.append(col[:1].upper() + col[1:])
-        df.columns = new_columns
+        # Rename only columns in COLUMN_NAME_MAP, keep others unchanged
+        df = df.rename(columns=COLUMN_NAME_MAP)
         return df
 
     def filter_target_values(self):
@@ -48,14 +38,6 @@ class DataPreprocessorPipeline:
         self.df = self.df[self.df["Target"].isin(["Dropout", "Graduate"])]
         self.df["Target"] = self.df["Target"].replace({"Dropout": 0, "Graduate": 1})
 
-    def clean_column_names(self):
-        """
-        Ensure column names are consistent by replacing invalid characters with underscores.
-        """
-        self.df.columns = self.df.columns.str.replace(
-            r"\/s+|[^a-zA-Z0-9]", "_", regex=True
-        )
-
     def bin_column(self, column_name, bins, labels):
         """
         Bin a column into specified ranges and assign labels.
@@ -63,18 +45,6 @@ class DataPreprocessorPipeline:
         self.df[column_name] = pd.cut(
             self.df[column_name], bins=bins, labels=labels, right=False
         ).astype(int)
-
-    def preprocess_age_and_admission(self):
-        """
-        Preprocess 'Age_at_enrollment' and 'Admission_grade' columns by binning them into groups.
-        """
-        age_bins = [0, 21, 30, 45, 60, float("inf")]
-        age_labels = [1, 2, 3, 4, 5]
-        self.bin_column("Age_at_enrollment", age_bins, age_labels)
-
-        admission_bins = [0.0, 114.0, 133.0, 152.0, 171.0, float("inf")]
-        admission_labels = [1, 2, 3, 4, 5]
-        self.bin_column("Admission_grade", admission_bins, admission_labels)
 
     def plot_distribution_data(
         self,
@@ -154,9 +124,12 @@ class DataPreprocessorPipeline:
         total_priv_attr = []
         total_columns = list(self.df.columns)[:-1]
         for col in total_columns:
-            total_priv_attr.append(
-                [self.df[self.df["Target"] == 1][col].value_counts().head(1).index[0]]
-            )
+            # Calculate percentage of Target==1 for each value in col
+            value_counts = self.df.groupby(col)["Target"].mean()
+            # Select value with highest percentage of Target==1
+            priv_value = value_counts.idxmax()
+            total_priv_attr.append([priv_value])
+            print(f"Privileged group for {col}: {priv_value}")
         return total_priv_attr, total_columns
 
     def preprocess_standard_dataset(self, privileged_groups, total_columns):
@@ -184,12 +157,14 @@ class DataPreprocessorPipeline:
         """
         Run the entire preprocessing pipeline and save the final dataset to a CSV file.
         """
+
         self.df = self.preprocess_columns()
         self.filter_target_values()
-        self.clean_column_names()
         self.plot_distribution_data()
         self.plot_outliers()
-        self.preprocess_age_and_admission()
         privileged_groups, total_columns = self.get_privileged_groups()
         standard_df = self.preprocess_standard_dataset(privileged_groups, total_columns)
+        standard_df.columns = [
+            COLUMN_NAME_MAP.get(col, col) for col in standard_df.columns
+        ]
         save_to_csv(standard_df, output_path)
