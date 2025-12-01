@@ -18,10 +18,10 @@ Four key metrics quantify different dimensions of algorithmic fairness:
 
 | **Metric**                              | **Equation**                                                                  | **Meaning of Symbols**                                                                    |
 | --------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **Statistical Parity Difference (SPD)** | `SPD = P(Ŷ = 1 | A = 1) - P(Ŷ = 1 | A = 0)`        | `A`: protected attribute (1 = privileged, 0 = unprivileged); `Ŷ`: model prediction |
-| **Disparate Impact Ratio (DIR)**        | `DIR = P(Ŷ = 1 | A = 0) / P(Ŷ = 1 | A = 1)` | Ratio of positive outcomes for unprivileged vs privileged group                           |
-| **Equal Opportunity Difference (EOD)**  | `EOD = TPR_{A=1} - TPR_{A=0}`                                        | `TPR`: True Positive Rate = `P(Ŷ = 1 | Y = 1)`                                   |
-| **Average Odds Difference (AOD)**       | `AOD = [(TPR_{A=1} - TPR_{A=0}) + (FPR_{A=1} - FPR_{A=0})] / 2` | `FPR`: False Positive Rate = `P(Ŷ = 1 | Y = 0)`                                  |
+| **Statistical Parity Difference (SPD)** | $\text{SPD} = P(\hat{Y} = 1 \mid A = 1) - P(\hat{Y} = 1 \mid A = 0)$ | $A$: protected attribute (1 = privileged, 0 = unprivileged); $\hat{Y}$: model prediction |
+| **Disparate Impact Ratio (DIR)**        | $\text{DIR} = \frac{P(\hat{Y} = 1 \mid A = 0)}{P(\hat{Y} = 1 \mid A = 1)}$ | Ratio of positive outcomes for unprivileged vs privileged group                           |
+| **Equal Opportunity Difference (EOD)**  | $\text{EOD} = \text{TPR}_{A=1} - \text{TPR}_{A=0}$                                        | $\text{TPR}$: True Positive Rate = $P(\hat{Y} = 1 \mid Y = 1)$                                   |
+| **Average Odds Difference (AOD)**       | $\text{AOD} = \frac{[(\text{TPR}_{A=1} - \text{TPR}_{A=0}) + (\text{FPR}_{A=1} - \text{FPR}_{A=0})]}{2}$ | $\text{FPR}$: False Positive Rate = $P(\hat{Y} = 1 \mid Y = 0)$                                  |                          |
 
 ---
 
@@ -41,7 +41,7 @@ Four key metrics quantify different dimensions of algorithmic fairness:
 | Father's qualification             | 0.1558                   | 1.3116            | 0.2763                 | 0.105                  |
 | Mother's occupation                | 0.1579                  | 1.3157            | 0.1333                      | 0.1068                 |
 | Father's occupation                | 0.0788                       | 1.1365                | 0.0331                      | 0.1002                 |
-| Admission grade                    |                              |                       | **0.8447**                  | 0.1041                 |
+| Admission grade                    | -                             |  -                     | **0.8447**                  | 0.1041                 |
 | Displaced                          | -0.187                   | 0.7459                | -0.0901                     | -0.1409                |
 | Educational special needs          | **-0.3488**                  | 0.6512                | -0.1567                 | **-0.3981**            |
 | Debtor                             | **0.4866**                   | **3.135**             | 0.2388                  | 0.2717             |

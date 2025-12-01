@@ -1,4 +1,4 @@
-site_name: Fairness ML
+site_name: "Fairness-Aware Machine Learning for Student Success Prediction" 
 nav:
   - Exploratory Data Analysis: data_processing/eda.md
   - Bias Detection: 
@@ -15,10 +15,12 @@ theme:
   name: material
   palette:
     - scheme: default
-      primary: indigo
+      primary: white
       accent: pink
+  icon:
+    logo: material/scale-balance
   font:
-    text: Inter
+    text: Roboto
     code: Roboto Mono
 
 markdown_extensions:
