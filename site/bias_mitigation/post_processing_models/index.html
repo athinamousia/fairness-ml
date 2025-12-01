@@ -709,6 +709,7 @@
 <p>Post-processing techniques adjust model predictions after training to satisfy fairness constraints. By modifying outputs rather than training data or algorithms, these methods enable fairness corrections without retraining, making them particularly useful for deployed models or when training data cannot be modified.</p>
 <hr />
 <h2 id="calibrated-equalized-odds">Calibrated Equalized Odds</h2>
+<p><em>G. Pleiss, M. Raghavan, F. Wu, J. Kleinberg, and K. Q. Weinberger, “On Fairness and Calibration,” Conference on Neural Information Processing Systems, 2017</em></p>
 <p>Calibrated Equalized Odds is a post-processing technique that adjusts classifier decision thresholds to achieve equalized odds—ensuring equal true positive rates and false positive rates across protected groups. The method operates on the predicted probabilities or scores from any trained classifier, applying group-specific threshold adjustments to satisfy fairness constraints.</p>
 <p>The algorithm optimizes a linear transformation of predicted probabilities for each protected group:</p>
 <ul>
@@ -857,6 +858,7 @@
 <p>This suggests the threshold calibration process overcompensated for certain groups while amplifying bias for others. </p>
 <hr />
 <h2 id="reject-option-classification">Reject Option Classification</h2>
+<p><em>F. Kamiran, A. Karim, and X. Zhang, “Decision Theory for Discrimination-Aware Classification,” IEEE International Conference on Data Mining, 2012.</em></p>
 <p>Reject Option Classification is a post-processing technique that adjusts predictions within a "critical region" near the decision boundary where the classifier is most uncertain. Rather than applying uniform threshold shifts, this method selectively modifies predictions for instances where small probability changes can significantly improve fairness without sacrificing much accuracy.</p>
 <p>The algorithm identifies and adjusts predictions in three steps:</p>
 <ol>
