@@ -83,7 +83,7 @@ pip install -r requirements.txt
 - `tensorflow` - Required for Adversarial Debiasing
 - `pandas`, `numpy` - Data manipulation
 - `matplotlib`, `seaborn` - Visualization
-- `shap`, `lime` - Model explainability
+- `shap` - Model explainability
 
 ## Usage
 
@@ -98,7 +98,7 @@ python main.py --pipeline <pipeline_name>
 
 ## License
 
-This project is part of a Master's thesis in UoM university on algorithmic fairness in educational predictive analytics.
+This project is part of a Master's thesis on algorithmic fairness in educational predictive analytics.
 
 ---
 
