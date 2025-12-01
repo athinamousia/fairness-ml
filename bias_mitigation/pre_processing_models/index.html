@@ -709,6 +709,8 @@
 <p>Pre-processing techniques transform training data to reduce bias before model training begins. By addressing discriminatory patterns in the data itself, these methods enable any downstream classifier to learn from more equitable representations, without requiring modifications to training algorithms.</p>
 <hr />
 <h2 id="learning-fair-representations-lfr">Learning Fair Representations (LFR)</h2>
+<p><em>R. Zemel, Y. Wu, K. Swersky, T. Pitassi, and C. Dwork, “Learning Fair
+ Representations.” International Conference on Machine Learning, 2013</em></p>
 <p>Learning Fair Representations transforms input features into an intermediate representation that preserves predictive information while obscuring protected attribute membership. This learned embedding space balances three competing objectives through joint optimization:</p>
 <ul>
 <li><strong>Group Fairness</strong>: Minimize statistical dependence between the learned representation and protected attributes, preventing the model from encoding demographic information</li>
@@ -849,6 +851,8 @@
 <p>This tradeoff demonstrates that LFR achieves partial debiasing rather than universal fairness across all protected groups and metrics.</p>
 <hr />
 <h2 id="reweighing">Reweighing</h2>
+<p><em>F. Kamiran and T. Calders, “Data Preprocessing Techniques for Classification
+ without Discrimination,” Knowledge and Information Systems, 2012</em> </p>
 <p>Reweighing is a pre-processing technique that assigns sample-specific weights to correct for imbalances in the joint distribution of protected attributes and outcomes. Rather than modifying features or labels, this method adjusts the relative importance of training instances to achieve statistical parity.</p>
 <p>Each training sample receives a weight calculated based on its protected group membership and target class:</p>
 <p><span class="arithmatex">\(w_{i} = \frac{P(\text{group}) \times P(\text{label})}{P(\text{group}, \text{label})}\)</span></p>
