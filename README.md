@@ -19,7 +19,6 @@ This project addresses algorithmic fairness in predictive models for student aca
 - **Detect bias** through pre-modeling statistical analysis and post-modeling fairness metrics
 - **Mitigate bias** using 7 different fairness-aware machine learning techniques
 - **Explain predictions** with SHAP for model interpretability
-- **Document findings** in a comprehensive MkDocs-based knowledge base
 
 
 ## Project Structure
