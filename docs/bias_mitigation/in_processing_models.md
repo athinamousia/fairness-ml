@@ -5,7 +5,9 @@ In-processing techniques incorporate fairness constraints directly into the mode
 ---
 
 ## Adversarial Debiasing
-
+*B. H. Zhang, B. Lemoine, and M. Mitchell, “Mitigating Unwanted Biases with
+ Adversarial Learning,” AAAI/ACM Conference on Artificial Intelligence, Ethics, and
+ Society, 2018.*
 Adversarial Debiasing employs an adversarial training framework to learn fair representations during model optimization. The technique uses two competing neural networks trained simultaneously through a minimax game:
 
 - **Predictor**: Learns to predict the target outcome while minimizing predictive loss
@@ -53,8 +55,6 @@ Adversarial Debiasing achieves moderate fairness improvements while maintaining 
 | | Average Odds Difference | -0.34 | -0.43 | ✗ |
 
 
-**Interpretation:**
-
 Adversarial Debiasing achieves mixed results, improving fairness for Debtor and Gender while degrading Scholarship holder metrics. 
 
 This degradation occurs because the adversarial training was prioritized to address fairness violations in the Debtor and Gender attributes. Including more protected attributes in adversarial training increases model complexity and creates competing optimization objectives, leading to performance degradation.
@@ -66,6 +66,7 @@ This degradation occurs because the adversarial training was prioritized to addr
 ---
 
 ## Exponentiated Gradient Reduction (EGR)
+*A. Agarwal, A. Beygelzimer, M. Dudik, J. Langford, and H. Wallach, “A Reductions Approach to Fair Classification,” International Conference on Machine Learning, 2018.* 
 
 Exponentiated Gradient Reduction is an in-processing technique that formulates fair classification as a constrained optimization problem. Rather than modifying the learning algorithm internally, EGR treats the base classifier as a black box and applies fairness constraints through a reduction framework.
 

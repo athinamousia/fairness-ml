@@ -1,2 +1,51 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
 .venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# MkDocs
+site/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Model files (large binaries)
+*.pkl
+*.h5
+*.joblib
+*.model
+output/model/*.pkl
+output/model/*.h5
+
+# Data files (if large)
+# data/*.csv  # Uncomment if datasets are too large
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
