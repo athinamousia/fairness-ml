@@ -6,6 +6,9 @@ Pre-processing techniques transform training data to reduce bias before model tr
 
 ## Learning Fair Representations (LFR)
 
+*R. Zemel, Y. Wu, K. Swersky, T. Pitassi, and C. Dwork, “Learning Fair
+ Representations.” International Conference on Machine Learning, 2013*
+
 Learning Fair Representations transforms input features into an intermediate representation that preserves predictive information while obscuring protected attribute membership. This learned embedding space balances three competing objectives through joint optimization:
 
 - **Group Fairness**: Minimize statistical dependence between the learned representation and protected attributes, preventing the model from encoding demographic information
@@ -55,6 +58,8 @@ This tradeoff demonstrates that LFR achieves partial debiasing rather than unive
 ---
 
 ## Reweighing
+*F. Kamiran and T. Calders, “Data Preprocessing Techniques for Classification
+ without Discrimination,” Knowledge and Information Systems, 2012* 
 
 Reweighing is a pre-processing technique that assigns sample-specific weights to correct for imbalances in the joint distribution of protected attributes and outcomes. Rather than modifying features or labels, this method adjusts the relative importance of training instances to achieve statistical parity.
 

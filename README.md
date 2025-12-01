@@ -1,6 +1,8 @@
-# Fairness in Machine Learning: Student Retention Prediction
+# Fairness-Aware Machine Learning for Student Success Prediction
 
-A comprehensive framework for detecting and mitigating algorithmic bias in student retention prediction systems. This project implements pre-processing, in-processing, and post-processing fairness interventions using the AIF360 toolkit, with extensive documentation and model explainability analysis.
+A comprehensive framework for detecting and mitigating algorithmic bias in student retention prediction systems. This project implements pre-processing, in-processing, and post-processing fairness interventions using the AIF360 toolkit and model explainability analysis.
+
+📚 **[View Full Documentation](https://athinamousia.github.io/fairness-ml/)**
 
 ## Table of Contents
 
@@ -96,12 +98,11 @@ python main.py --pipeline <pipeline_name>
 
 ## License
 
-This project is part of a Master's thesis on algorithmic fairness in educational predictive analytics.
+This project is part of a Master's thesis in UoM university on algorithmic fairness in educational predictive analytics.
 
 ---
 
 **Author**: Athina Mousia  
 **Repository**: [github.com/athinamousia/fairness-ml](https://github.com/athinamousia/fairness-ml)  
-**Branch**: dev
 
 For questions or issues, please open an issue on the GitHub repository.

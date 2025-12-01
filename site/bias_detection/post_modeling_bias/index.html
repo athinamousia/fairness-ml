@@ -1,0 +1,1083 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../pre_modeling_bias/">
+      
+      
+        <link rel="next" href="../../bias_mitigation/bias_mitigation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Post-Modeling Bias - Fairness-Aware Machine Learning for Student Success Prediction</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#post-modeling-bias-detection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fairness-Aware Machine Learning for Student Success Prediction" class="md-header__button md-logo" aria-label="Fairness-Aware Machine Learning for Student Success Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-1.27 0-2.4.8-2.82 2H3v2h1.95L2 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3L6.05 7h3.12c.33.85.98 1.5 1.83 1.83V20H2v2h20v-2h-9V8.82c.85-.32 1.5-.97 1.82-1.82h3.13L15 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3l-2.95-7H21V5h-6.17C14.4 3.8 13.27 3 12 3m0 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m-6.5 5.25L7 14H4zm13 0L20 14h-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fairness-Aware Machine Learning for Student Success Prediction
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Post-Modeling Bias
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="pink"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fairness-Aware Machine Learning for Student Success Prediction" class="md-nav__button md-logo" aria-label="Fairness-Aware Machine Learning for Student Success Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-1.27 0-2.4.8-2.82 2H3v2h1.95L2 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3L6.05 7h3.12c.33.85.98 1.5 1.83 1.83V20H2v2h20v-2h-9V8.82c.85-.32 1.5-.97 1.82-1.82h3.13L15 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3l-2.95-7H21V5h-6.17C14.4 3.8 13.27 3 12 3m0 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m-6.5 5.25L7 14H4zm13 0L20 14h-3z"/></svg>
+
+    </a>
+    Fairness-Aware Machine Learning for Student Success Prediction
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data_processing/eda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exploratory Data Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bias Detection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bias Detection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bias_detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_modeling_bias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-Modeling Bias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Modeling Bias
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Modeling Bias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fairness-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fairness Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-performance-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Performance Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bias Mitigation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bias Mitigation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bias_mitigation/bias_mitigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bias_mitigation/pre_processing_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-Processing Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bias_mitigation/in_processing_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    In-Processing Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bias_mitigation/post_processing_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Processing Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explainability/explainability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fairness-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fairness Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-performance-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Performance Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="post-modeling-bias-detection">Post-Modeling Bias Detection</h1>
+<p>Post-modeling bias detection evaluates whether a trained model produces fair predictions across different demographic groups. This stage assesses model outputs to identify disparate treatment or impact that may disadvantage protected populations.</p>
+<h2 id="fairness-metrics">Fairness Metrics</h2>
+<p>Four key metrics quantify different dimensions of algorithmic fairness:</p>
+<ul>
+<li>
+<p><strong>Statistical Parity Difference (SPD)</strong>: Measures the difference in positive prediction rates between privileged and unprivileged groups. A value of zero indicates equal treatment; deviations from zero signal potential bias.</p>
+</li>
+<li>
+<p><strong>Disparate Impact Ratio (DIR)</strong>: Compares the ratio of positive outcomes between unprivileged and privileged groups. A value of 1.0 indicates parity. Values below 0.8 or above 1.25 are commonly considered evidence of disparate impact.</p>
+</li>
+<li>
+<p><strong>Equal Opportunity Difference (EOD)</strong>: Quantifies the difference in true positive rates (recall) between groups. A value near zero ensures both groups have equal probability of correctly receiving positive predictions when they should.</p>
+</li>
+<li>
+<p><strong>Average Odds Difference (AOD)</strong>: Aggregates differences in both false positive and true positive rates across groups. A value near zero indicates balanced performance, minimizing both missed opportunities and false alarms for all groups.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th><strong>Equation</strong></th>
+<th><strong>Meaning of Symbols</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Statistical Parity Difference (SPD)</strong></td>
+<td><span class="arithmatex">\(\text{SPD} = P(\hat{Y} = 1 \mid A = 1) - P(\hat{Y} = 1 \mid A = 0)\)</span></td>
+<td><span class="arithmatex">\(A\)</span>: protected attribute (1 = privileged, 0 = unprivileged); <span class="arithmatex">\(\hat{Y}\)</span>: model prediction</td>
+</tr>
+<tr>
+<td><strong>Disparate Impact Ratio (DIR)</strong></td>
+<td><span class="arithmatex">\(\text{DIR} = \frac{P(\hat{Y} = 1 \mid A = 0)}{P(\hat{Y} = 1 \mid A = 1)}\)</span></td>
+<td>Ratio of positive outcomes for unprivileged vs privileged group</td>
+</tr>
+<tr>
+<td><strong>Equal Opportunity Difference (EOD)</strong></td>
+<td><span class="arithmatex">\(\text{EOD} = \text{TPR}_{A=1} - \text{TPR}_{A=0}\)</span></td>
+<td><span class="arithmatex">\(\text{TPR}\)</span>: True Positive Rate = <span class="arithmatex">\(P(\hat{Y} = 1 \mid Y = 1)\)</span></td>
+</tr>
+<tr>
+<td><strong>Average Odds Difference (AOD)</strong></td>
+<td><span class="arithmatex">\(\text{AOD} = \frac{[(\text{TPR}_{A=1} - \text{TPR}_{A=0}) + (\text{FPR}_{A=1} - \text{FPR}_{A=0})]}{2}\)</span></td>
+<td><span class="arithmatex">\(\text{FPR}\)</span>: False Positive Rate = <span class="arithmatex">\(P(\hat{Y} = 1 \mid Y = 0)\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>Key Findings:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Protected Attribute</th>
+<th>Statistical Parity Difference</th>
+<th>Disparate Impact Ratio</th>
+<th>Equal Opportunity Difference</th>
+<th>Average Odds Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marital status</td>
+<td>0.2382</td>
+<td><strong>1.5461</strong></td>
+<td>0.1472</td>
+<td>0.1918</td>
+</tr>
+<tr>
+<td>Application mode</td>
+<td><strong>0.6556</strong></td>
+<td>0.0</td>
+<td><strong>0.846</strong></td>
+<td><strong>0.6056</strong></td>
+</tr>
+<tr>
+<td>Application order</td>
+<td>0.1805</td>
+<td>1.3034</td>
+<td>0.101</td>
+<td>0.1406</td>
+</tr>
+<tr>
+<td>Course</td>
+<td>0.0304</td>
+<td>1.0486</td>
+<td>0.0617</td>
+<td>-0.0231</td>
+</tr>
+<tr>
+<td>Daytime/evening attendance</td>
+<td>-0.1814</td>
+<td>0.7303</td>
+<td>-0.2262</td>
+<td>-0.1534</td>
+</tr>
+<tr>
+<td>Previous qualification</td>
+<td><strong>0.6593</strong></td>
+<td>0.0</td>
+<td><strong>0.8473</strong></td>
+<td><strong>0.6084</strong></td>
+</tr>
+<tr>
+<td>Previous qualification (grade)</td>
+<td>-</td>
+<td>-</td>
+<td><strong>0.8447</strong></td>
+<td>0.1041</td>
+</tr>
+<tr>
+<td>Nationality</td>
+<td>-</td>
+<td>-</td>
+<td><strong>0.8447</strong></td>
+<td>0.1041</td>
+</tr>
+<tr>
+<td>Mother's qualification</td>
+<td>-0.0131</td>
+<td>0.9803</td>
+<td>0.0603</td>
+<td>-0.0029</td>
+</tr>
+<tr>
+<td>Father's qualification</td>
+<td>0.1558</td>
+<td>1.3116</td>
+<td>0.2763</td>
+<td>0.105</td>
+</tr>
+<tr>
+<td>Mother's occupation</td>
+<td>0.1579</td>
+<td>1.3157</td>
+<td>0.1333</td>
+<td>0.1068</td>
+</tr>
+<tr>
+<td>Father's occupation</td>
+<td>0.0788</td>
+<td>1.1365</td>
+<td>0.0331</td>
+<td>0.1002</td>
+</tr>
+<tr>
+<td>Admission grade</td>
+<td>-</td>
+<td>-</td>
+<td><strong>0.8447</strong></td>
+<td>0.1041</td>
+</tr>
+<tr>
+<td>Displaced</td>
+<td>-0.187</td>
+<td>0.7459</td>
+<td>-0.0901</td>
+<td>-0.1409</td>
+</tr>
+<tr>
+<td>Educational special needs</td>
+<td><strong>-0.3488</strong></td>
+<td>0.6512</td>
+<td>-0.1567</td>
+<td><strong>-0.3981</strong></td>
+</tr>
+<tr>
+<td>Debtor</td>
+<td><strong>0.4866</strong></td>
+<td><strong>3.135</strong></td>
+<td>0.2388</td>
+<td>0.2717</td>
+</tr>
+<tr>
+<td>Gender</td>
+<td><strong>0.39</strong></td>
+<td><strong>1.9886</strong></td>
+<td><strong>0.3081</strong></td>
+<td>0.2953</td>
+</tr>
+<tr>
+<td>Scholarship holder</td>
+<td><strong>-0.3992</strong></td>
+<td>0.5809</td>
+<td>-0.2127</td>
+<td><strong>-0.3436</strong></td>
+</tr>
+<tr>
+<td>Age at enrollment</td>
+<td><strong>-0.3346</strong></td>
+<td>0.6308</td>
+<td>-0.1441</td>
+<td><strong>-0.3251</strong></td>
+</tr>
+<tr>
+<td>International</td>
+<td>-0.0872</td>
+<td>0.8821</td>
+<td>-0.1581</td>
+<td>-0.1258</td>
+</tr>
+<tr>
+<td>Unemployment rate</td>
+<td>-0.0576</td>
+<td>0.9185</td>
+<td>0.0155</td>
+<td>-0.0157</td>
+</tr>
+<tr>
+<td>Inflation rate</td>
+<td>-0.0575</td>
+<td>0.9186</td>
+<td>-0.0757</td>
+<td>-0.0759</td>
+</tr>
+<tr>
+<td>GDP</td>
+<td>0.003</td>
+<td>1.0046</td>
+<td>0.0154</td>
+<td>-0.0044</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>The baseline XGBoost model identifies significant fairness considerations across multiple protected attributes (bold values indicate concerning bias):</p>
+<p><strong>Critical Fairness Issues:</strong></p>
+<ul>
+<li>
+<p><strong>Application mode</strong> (SPD=0.66, EOD=0.85, AOD=0.61): The most severe bias detected. Students from certain application pathways face dramatically different prediction outcomes, with some groups systematically disadvantaged in graduation predictions.</p>
+</li>
+<li>
+<p><strong>Previous qualification</strong> (SPD=0.66, EOD=0.85, AOD=0.61): Strong disparities based on prior educational background, potentially perpetuating existing educational inequalities.</p>
+</li>
+<li>
+<p><strong>Debtor</strong> (SPD=0.49, DIR=3.14): Students in debt are substantially more likely to receive negative predictions. The DIR of 3.14 indicates debtors receive positive outcomes at three times the rate of non-debtors, revealing extreme model bias tied to financial status.</p>
+</li>
+<li>
+<p><strong>Gender</strong> (SPD=0.39, DIR=1.99): Male students receive positive predictions at nearly twice the rate of female students, representing significant gender-based discrimination in model outputs.</p>
+</li>
+<li>
+<p><strong>Scholarship holder</strong> (SPD=-0.40, AOD=-0.34): Scholarship recipients face lower positive prediction rates, disadvantaging students with financial support.</p>
+</li>
+<li>
+<p><strong>Age at enrollment</strong> (SPD=-0.33, AOD=-0.33): Older students receive systematically worse predictions, discriminating against non-traditional students.</p>
+</li>
+<li>
+<p><strong>Educational special needs</strong> (SPD=-0.35, AOD=-0.40): Students with special needs face substantial bias, indicating the model may unfairly predict lower graduation likelihood for this vulnerable population.</p>
+</li>
+</ul>
+<hr />
+<h2 id="model-performance-evaluation">Model Performance Evaluation</h2>
+<p><img alt="Evaluation" src="../plot/baseline_model_evaluation.png" /></p>
+<p>The baseline XGBoost model demonstrates strong predictive performance while revealing important insights about prediction patterns:</p>
+<p><strong>Confusion Matrix Analysis:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Prediction Type</th>
+<th>Count</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>True Negatives</strong></td>
+<td>275</td>
+<td>Correctly predicted dropouts (target=0), showing good ability to identify at-risk students</td>
+</tr>
+<tr>
+<td><strong>True Positives</strong></td>
+<td>555</td>
+<td>Correctly predicted graduates (target=1), demonstrating strong performance on the majority class</td>
+</tr>
+<tr>
+<td><strong>False Positives</strong></td>
+<td>157</td>
+<td>Incorrectly predicted graduation when students actually dropped out—missed intervention opportunities</td>
+</tr>
+<tr>
+<td><strong>False Negatives</strong></td>
+<td>102</td>
+<td>Incorrectly predicted dropout when students actually graduated—potentially denying support or opportunities</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Performance Metrics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Balanced Accuracy</strong></td>
+<td>0.74</td>
+<td>Accounts for class imbalance by averaging recall across both classes, indicating reasonably good performance on both graduates and dropouts</td>
+</tr>
+<tr>
+<td><strong>F1-Score</strong></td>
+<td>0.81</td>
+<td>Harmonic mean of precision and recall shows strong overall predictive capability, slightly favoring the majority (graduate) class</td>
+</tr>
+<tr>
+<td><strong>ROC-AUC</strong></td>
+<td>0.83</td>
+<td>Strong discriminative ability to distinguish between graduates and dropouts across various decision thresholds</td>
+</tr>
+</tbody>
+</table>
+<p>The model achieves solid predictive performance (ROC-AUC=0.83) but the confusion matrix reveals an important pattern: the model is more likely to incorrectly predict graduation (157 false positives) than incorrectly predict dropout (102 false negatives). This asymmetry, combined with the significant fairness considerations identified above, suggests the model's errors may not be randomly distributed across demographic groups. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
